@@ -22,7 +22,7 @@ Claude Code and Codex can take minutes on a task. Instead of staring at a spinne
 - **Never costs you a game.** It pauses on the banner, and whenever you click away.
 - **Opens beside your agent.** A popup or split next to Claude Code, with one command.
 - **Works with Claude Code and Codex**, and any other agent that can run a command.
-- **Tiny and private.** No dependencies, no account, no network. Nothing leaves your computer.
+- **Tiny and private.** No dependencies, no account, no tracking. Your scores stay on your computer.
 
 ## Getting started
 
@@ -112,6 +112,20 @@ More are on the way.
 
 Each game is one small file in [`src/games/`](src/games). The shell gives it the menu, the AI banners, pausing and best scores for free; the game only keeps its own state and draws its board. The interface is documented at the top of [`src/games/index.mjs`](src/games/index.mjs), and [`snake.mjs`](src/games/snake.mjs) is a complete example in about 60 lines. Pull requests are welcome!
 
+## Sponsor line
+
+agent-arcade is free. To help keep it that way, the menu and the game-over screen may show one line of text from a sponsor:
+
+```
+Sponsored · Acme Cloud: deploy in one command → acme.dev
+```
+
+- It never shows while you're playing, and it's always labelled "Sponsored".
+- About once a day, the game downloads one small public file, [`sponsor.json`](sponsor.json) in this repo, to get it. The request sends nothing about you: no ID, no scores, no tracking. Like any download, GitHub sees a normal web request.
+- **Turn it off** with `agent-arcade ads off` (or set `AGENT_ARCADE_ADS=off`). Then nothing is downloaded at all. `agent-arcade ads on` brings it back.
+
+Interested in sponsoring? [Open an issue](https://github.com/Kuldeep-045/agent-arcade/issues).
+
 ## How it works
 
 ```
@@ -120,7 +134,7 @@ Claude Code / Codex ──finishes──▶ agent-arcade notify ──▶ ~/.age
                        the game checks it a few times a second ◀─┘ → pause, beep, banner
 ```
 
-Best scores live in `~/.agent-arcade/best.json`. That folder is all agent-arcade keeps.
+Best scores live in `~/.agent-arcade/best.json`. That folder is all agent-arcade keeps; scores and play never leave your computer.
 
 ## Uninstall
 

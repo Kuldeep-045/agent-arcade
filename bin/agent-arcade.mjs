@@ -26,6 +26,7 @@ const HELP = `agent-arcade: play small games in your terminal while your AI agen
   agent-arcade setup --uninstall
   agent-arcade popup         open the arcade beside the current terminal (used by /arcade)
   agent-arcade notify [ask]  tell the arcade your agent is done (or needs you); for other agents' hooks
+  agent-arcade ads off|on    hide or show the one-line sponsor message (on by default)
 
 In a game: Esc pauses, q quits from the pause screen. Best scores live in ~/.agent-arcade.`;
 
@@ -33,7 +34,12 @@ if (!cmd) (await import('../src/shell.mjs')).run(games);
 else if (cmd === 'help' || cmd === '--help' || cmd === '-h') console.log(HELP);
 else if (cmd === '--version' || cmd === '-v') console.log(JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url))).version);
 else if (cmd === 'setup') (await import('../src/setup.mjs')).setup(CLI, { remove: arg === '--uninstall' });
-else if (cmd === 'popup') console.log((await import('../src/popup.mjs')).popup(CLI));
+else if (cmd === 'ads') {
+  const { adsOn, setAds, refreshSponsor, sponsorLine } = await import('../src/sponsor.mjs');
+  if (arg === 'off' || arg === 'on') setAds(arg === 'on');
+  if (arg === 'on') await refreshSponsor({ force: true });
+  console.log(adsOn() ? `Sponsor line: on. Showing now: ${sponsorLine() || 'nothing'}\nTurn it off with: agent-arcade ads off` : 'Sponsor line: off. Turn it back on with: agent-arcade ads on');
+} else if (cmd === 'popup') console.log((await import('../src/popup.mjs')).popup(CLI));
 else if (cmd === 'notify') {
   // Codex passes a JSON blob as the argument, which counts as "done".
   fs.mkdirSync(DIR, { recursive: true });

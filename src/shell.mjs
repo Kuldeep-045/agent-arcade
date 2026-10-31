@@ -2,6 +2,7 @@
 // Games only keep their own state and draw their board; see src/games/index.mjs for the game interface.
 import fs from 'node:fs';
 import { DIR, SIGNAL, BEST, PID } from './paths.mjs';
+import { sponsorLine, refreshSponsor } from './sponsor.mjs';
 
 export const color = {
   reset: '\x1b[0m', dim: '\x1b[2m', bold: '\x1b[1m', inverse: '\x1b[7m',
@@ -105,7 +106,7 @@ export function run(games, startId) {
     timer = setTimeout(loop, over || paused || agent || mode === 'menu' ? 200 : delay);
   }
 
-  function frame(title, rows, footer, overlay) {
+  function frame(title, rows, footer, overlay, note) {
     const w = Math.max(...rows.map(width), 40);
     const lines = [title, '┌' + '─'.repeat(w) + '┐'];
     const mid = rows.length >> 1;
@@ -122,6 +123,11 @@ export function run(games, startId) {
     // Centered in the window, so it sits in the middle of a popup.
     const top = Math.max(0, (out.rows - lines.length) >> 1), left = Math.max(0, (out.columns - w - 2) >> 1);
     out.write(lines.map((l, i) => `\x1b[${top + i + 1};${left + 1}H` + l + '\x1b[0m').join(''));
+    // The sponsor line sits under the footer, centered in the window, never wider than it.
+    if (note && out.rows > top + lines.length + 1) {
+      const text = note.length > out.columns - 2 ? note.slice(0, out.columns - 3) + '…' : note;
+      out.write(`\x1b[${top + lines.length + 2};1H\x1b[2K\x1b[${top + lines.length + 2};${Math.max(1, ((out.columns - text.length) >> 1) + 1)}H${color.dim}${text}${color.reset}`);
+    }
   }
 
   function agentOverlay() {
@@ -140,7 +146,7 @@ export function run(games, startId) {
       });
       rows.push('');
       while (rows.length < 8) rows.push('');
-      frame(`${color.bold} AGENT ARCADE${color.reset}  ${color.dim}play while your AI works${color.reset}`, rows, ' ↑↓ choose · Enter play · q quit', agentOverlay());
+      frame(`${color.bold} AGENT ARCADE${color.reset}  ${color.dim}play while your AI works${color.reset}`, rows, ' ↑↓ choose · Enter play · q quit', agentOverlay(), sponsorLine());
       return;
     }
     let overlay = agentOverlay();
@@ -149,7 +155,7 @@ export function run(games, startId) {
     else if (!overlay && paused) overlay = { style: color.note, lines: ['', 'Paused', 'Esc: resume   r: restart   m: menu   q: quit', ''] };
     const extra = game.status ? '   ' + game.status(state) : '';
     frame(`${color.bold} ${game.name.toUpperCase()}${color.reset}   score ${color.bold}${showScore(game, score)}${color.reset}   best ${showScore(game, best[game.id])}${extra}`,
-      game.draw(state), ` ${game.help} · Esc pause`, overlay);
+      game.draw(state), ` ${game.help} · Esc pause`, overlay, over ? sponsorLine() : null); // never during play
   }
 
   function quit() {
@@ -190,6 +196,7 @@ export function run(games, startId) {
   }
 
   out.write('\x1b[?1049h\x1b[?25l\x1b[?1004h\x1b[2J'); // alt screen, no cursor, focus reports (1004)
+  refreshSponsor(); // in the background, at most once a day
   fs.writeFileSync(PID, String(process.pid));
   process.stdin.setRawMode(true);
   process.stdin.setEncoding('utf8');
