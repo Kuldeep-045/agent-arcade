@@ -12,6 +12,6 @@
 //   score(state)        the current score
 //   status(state)       optional extra text for the header, e.g. lives
 import snake from './snake.mjs';
-import typer from './typer.mjs';
+// typer.mjs (Type racer) is kept but off the menu for now; add it back to the list to bring it back.
 
-export default [snake, typer];
+export default [snake];

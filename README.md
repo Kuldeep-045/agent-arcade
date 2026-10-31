@@ -50,7 +50,6 @@ agent-arcade notify ask    # "your AI needs your input"
 ## Games
 
 - **Snake**: eat, grow, avoid the walls.
-- **Type racer**: code words (`async`, `git rebase`, `useEffect`…) fall down; type each one before it lands.
 
 More are coming. Each game is one file in `src/games/`; see `src/games/index.mjs` for the interface. The shell handles the menu, banners, pausing and best scores.
 
