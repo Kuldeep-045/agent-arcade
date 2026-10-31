@@ -1,62 +1,135 @@
-# agent-arcade
+<h1 align="center">🕹️ agent-arcade</h1>
 
-Small terminal games to play while your AI coding agent works.
-When the agent finishes, or needs your approval, the game pauses, beeps and shows a banner, so you get back to work right away.
+<p align="center">
+  <b>Play small games in your terminal while your AI coding agent works.</b><br>
+  When it finishes (or needs your approval), the game pauses, beeps and tells you.
+</p>
 
-Works with **Claude Code** and **Codex** out of the box, and with any other agent that can run a command when it's done.
+<p align="center">
+  <a href="https://www.npmjs.com/package/agent-arcade"><img src="https://img.shields.io/npm/v/agent-arcade?color=cb3837&logo=npm" alt="npm version"></a>
+  <img src="https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white" alt="node 18+">
+  <img src="https://img.shields.io/badge/dependencies-0-brightgreen" alt="zero dependencies">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
+</p>
 
-```
- SNAKE   score 12   best 31
-┌────────────────────────────────────────────────┐
-│                                                │
-│              Your AI is done!                  │
-│        q: back to work   c: keep playing       │
-│                                                │
-└────────────────────────────────────────────────┘
-```
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Kuldeep-045/agent-arcade/main/assets/demo.gif" alt="Playing Snake in the terminal until a banner says: Your AI is done!" width="760">
+</p>
 
-## Install
+Claude Code and Codex can take minutes on a task. Instead of staring at a spinner or wandering off to another tab and forgetting to come back, play a quick round right there, and get pulled back the moment your agent is done.
+
+- **Knows when your AI is done.** A yellow banner for "finished", a red one for "needs your input", plus a beep.
+- **Never costs you a game.** It pauses on the banner, and whenever you click away.
+- **Opens beside your agent.** A popup or split next to Claude Code, with one command.
+- **Works with Claude Code and Codex**, and any other agent that can run a command.
+- **Tiny and private.** No dependencies, no account, no network. Nothing leaves your computer.
+
+## Getting started
+
+**1. Install**
 
 ```sh
 npm install -g agent-arcade
+```
+
+**2. Connect your agents** (once)
+
+```sh
 agent-arcade setup
 ```
 
-`setup` connects Claude Code (a "finished" hook, a "waiting for you" hook, and a `/arcade` command) and Codex (`notify` in `~/.codex/config.toml`).
-It backs each file up first and never touches hooks it didn't add. Undo it all with `agent-arcade setup --uninstall`.
+This connects whatever you have installed:
 
-## Play
-
-| | |
+| Agent | What `setup` adds |
 |---|---|
-| `agent-arcade` | open the menu |
-| `agent-arcade snake` | jump straight into a game |
-| `/arcade` in Claude Code | open the arcade beside the chat |
+| Claude Code | a hook for "finished", a hook for "waiting for you", and an `/arcade` command |
+| Codex | a `notify` line in `~/.codex/config.toml` |
 
-`/arcade` opens it next to your agent: a centered popup in tmux, a split in Ghostty and iTerm2, a new window in Terminal.
-In Ghostty, set `quick-terminal-position = center` and the arcade opens as a popup in the middle of the screen; click outside to hide it (the game pauses).
+It backs up each file first, keeps any hooks you already have, and `agent-arcade setup --uninstall` removes everything it added.
 
-In a game, **Esc** pauses; from there **r** restarts, **m** goes to the menu, **q** quits. The game also pauses when you click away.
+**3. Play**
+
+Start a task in your agent, then open the arcade:
+
+| Where you are | How to open it |
+|---|---|
+| Inside Claude Code | type `/arcade` |
+| Any terminal tab | run `agent-arcade` |
+| Straight into a game | run `agent-arcade snake` |
+
+When the banner pops up, press **q** to get back to work, or **c** to keep playing.
+
+> Restart Claude Code or Codex after `setup`. Sessions that were already open don't pick up the new hooks.
+
+## Controls
+
+| Key | Does |
+|---|---|
+| ↑ ↓ ← → or W A S D | move |
+| Esc | pause; then **r** restart · **m** menu · **q** quit |
+| q / c | on the AI banner: back to work / keep playing |
+
+The game also pauses by itself when you click away from it.
+
+## Where it opens
+
+`/arcade` (and `agent-arcade popup`) opens the arcade next to your agent, using what your terminal supports:
+
+| Terminal | Opens as |
+|---|---|
+| tmux | a popup in the middle of the window |
+| Ghostty | a split beside the chat, or a centered popup (see below) |
+| iTerm2 | a split beside the chat |
+| macOS Terminal | a new window |
+| Anything else | run `agent-arcade` in a new tab |
+
+**Ghostty popup tip:** add these lines to your Ghostty config and the arcade floats in the middle of the screen, with a shortcut that works even while your agent is busy:
+
+```
+quick-terminal-position = center
+quick-terminal-size = 60%,55%
+keybind = super+shift+s=toggle_quick_terminal
+```
 
 ## Other agents
 
-Have your agent run this when it finishes:
+Any agent (or script) that can run a command when it finishes can use the banner:
 
 ```sh
-agent-arcade notify        # "your AI is done"
-agent-arcade notify ask    # "your AI needs your input"
+agent-arcade notify        # yellow: "Your AI is done!"
+agent-arcade notify ask    # red: "Your AI needs your input!"
 ```
 
 ## Games
 
-- **Snake**: eat, grow, avoid the walls.
+| Game | |
+|---|---|
+| 🐍 **Snake** | Eat, grow, don't hit the walls or yourself. Speeds up as you score. |
 
-More are coming. Each game is one file in `src/games/`; see `src/games/index.mjs` for the interface. The shell handles the menu, banners, pausing and best scores.
+More are on the way.
 
-## Privacy
+### Add a game
 
-Nothing leaves your computer. Best scores are kept in `~/.agent-arcade`.
+Each game is one small file in [`src/games/`](src/games). The shell gives it the menu, the AI banners, pausing and best scores for free; the game only keeps its own state and draws its board. The interface is documented at the top of [`src/games/index.mjs`](src/games/index.mjs), and [`snake.mjs`](src/games/snake.mjs) is a complete example in about 60 lines. Pull requests are welcome!
+
+## How it works
+
+```
+Claude Code / Codex ──finishes──▶ agent-arcade notify ──▶ ~/.agent-arcade/signal
+                                                                 │
+                       the game checks it a few times a second ◀─┘ → pause, beep, banner
+```
+
+Best scores live in `~/.agent-arcade/best.json`. That folder is all agent-arcade keeps.
+
+## Uninstall
+
+```sh
+agent-arcade setup --uninstall   # remove the hooks and /arcade
+npm uninstall -g agent-arcade
+rm -rf ~/.agent-arcade           # optional: your best scores
+```
 
 ## License
 
-MIT
+[MIT](LICENSE)
