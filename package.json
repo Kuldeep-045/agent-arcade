@@ -1,0 +1,35 @@
+{
+  "name": "agent-arcade",
+  "version": "0.1.0",
+  "description": "Small terminal games to play while your AI coding agent (Claude Code, Codex) works. A banner pops up when it's done.",
+  "author": "Skynett Games",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kuldeep-045/agent-arcade.git"
+  },
+  "homepage": "https://github.com/Kuldeep-045/agent-arcade#readme",
+  "bugs": {
+    "url": "https://github.com/Kuldeep-045/agent-arcade/issues"
+  },
+  "type": "module",
+  "bin": {
+    "agent-arcade": "bin/agent-arcade.mjs"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "terminal",
+    "game",
+    "snake",
+    "claude-code",
+    "codex",
+    "ai",
+    "cli"
+  ],
+  "license": "MIT"
+}
