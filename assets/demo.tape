@@ -14,7 +14,7 @@ Set CursorBlink false
 # A fresh home so the demo starts with no best scores, seed 11 so the food lands where the moves below
 # go (the snake eats 4), and the AI "finishes" just after the fourth bite.
 Hide
-Type "export HOME=$(mktemp -d) PS1='%F{cyan}$%f ' && setopt nomonitor && export AGENT_ARCADE_SEED=11 && (sleep 8.9; agent-arcade notify done) & clear"
+Type "export HOME=$(mktemp -d) PS1='%F{cyan}$%f ' && setopt nomonitor && export AGENT_ARCADE_SEED=11 && (sleep 11.9; agent-arcade notify done) & clear"
 Enter
 Sleep 500ms
 Show
@@ -24,9 +24,9 @@ Sleep 400ms
 Enter
 Sleep 1800ms
 
-# Snake: the planned moves for seed 11 (each lands mid-tick).
+# Snake: a 3-second countdown, then the planned moves for seed 11 (each lands mid-tick).
 Enter
-Sleep 760ms
+Sleep 3700ms
 Down
 Sleep 134ms
 Right

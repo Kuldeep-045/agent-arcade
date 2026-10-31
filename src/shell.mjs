@@ -73,12 +73,19 @@ export function run(games, startId) {
   let mode = 'menu'; // 'menu' | 'play'
   let pick = 0, game = null, state = null;
   let paused = false, over = false, record = false, timer;
+  let goAt = 0; // a 3-2-1 countdown runs until this time before the game moves
+
+  function countdown() {
+    paused = false;
+    goAt = Date.now() + 3000;
+  }
 
   function start(g) {
     game = g;
     state = g.start();
     mode = 'play';
     paused = over = record = false;
+    countdown();
     out.write('\x1b[2J');
     loop();
   }
@@ -95,7 +102,9 @@ export function run(games, startId) {
     clearTimeout(timer);
     checkAgent();
     let delay = 200;
-    if (mode === 'play' && !paused && !over && !agent) {
+    const counting = mode === 'play' && !paused && !over && !agent && Date.now() < goAt;
+    if (counting) delay = Math.min(100, goAt - Date.now()); // wake exactly when it hits zero
+    else if (mode === 'play' && !paused && !over && !agent) {
       delay = game.tick(state, Date.now());
       if (state.over) {
         over = true;
@@ -103,7 +112,7 @@ export function run(games, startId) {
       }
     }
     draw();
-    timer = setTimeout(loop, over || paused || agent || mode === 'menu' ? 200 : delay);
+    timer = setTimeout(loop, over || paused || agent || mode === 'menu' ? 200 : Math.max(1, delay));
   }
 
   function frame(title, rows, footer, overlay, note) {
@@ -153,6 +162,7 @@ export function run(games, startId) {
     const score = game.score(state);
     if (!overlay && over) overlay = { style: color.banner, lines: ['', record ? `New best: ${showScore(game, score)}!` : `Game over: ${showScore(game, score)}`, 'r: again   m: menu   q: quit', ''] };
     else if (!overlay && paused) overlay = { style: color.note, lines: ['', 'Paused', 'Esc: resume   r: restart   m: menu   q: quit', ''] };
+    else if (!overlay && Date.now() < goAt) overlay = { style: color.note, lines: ['', `${Math.ceil((goAt - Date.now()) / 1000)}`, 'get ready…', ''] };
     const extra = game.status ? '   ' + game.status(state) : '';
     frame(`${color.bold} ${game.name.toUpperCase()}${color.reset}   score ${color.bold}${showScore(game, score)}${color.reset}   best ${showScore(game, best[game.id])}${extra}`,
       game.draw(state), ` ${game.help} · Esc pause`, overlay, over ? sponsorLine() : null); // never during play
@@ -173,7 +183,7 @@ export function run(games, startId) {
     if (agent) {
       if (Date.now() - agentAt < 700) return;
       if (k === 'q') quit();
-      else if (k === 'c' || k === 'esc') { agent = null; if (mode === 'play' && !over) paused = true; }
+      else if (k === 'c' || k === 'esc') { agent = null; if (mode === 'play' && !over) countdown(); }
       else if (k === 'm') { agent = null; toMenu(); }
       return;
     }
@@ -188,7 +198,7 @@ export function run(games, startId) {
       if (k === 'r') start(game);
       else if (k === 'm') toMenu();
       else if (k === 'q') quit();
-      else if (k === 'esc' && paused) paused = false;
+      else if (k === 'esc' && paused) countdown();
       return;
     }
     if (k === 'esc') paused = true;

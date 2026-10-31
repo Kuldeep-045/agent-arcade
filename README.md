@@ -69,7 +69,7 @@ When the banner pops up, press **q** to get back to work, or **c** to keep playi
 | Esc | pause; then **r** restart · **m** menu · **q** quit |
 | q / c | on the AI banner: back to work / keep playing |
 
-The game also pauses by itself when you click away from it.
+The game also pauses by itself when you click away from it. Every start, restart and resume gives you a **3-2-1 countdown**, so you're never caught off guard.
 
 ## Where it opens
 
