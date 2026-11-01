@@ -151,6 +151,8 @@ Interested in sponsoring? [Open an issue](https://github.com/Kuldeep-045/agent-a
 
 ## How it works
 
+The full story, with code: [I used Claude Code's hooks to pause a terminal game the moment my agent finishes](https://dev.to/kuldeepmahour/i-used-claude-codes-hooks-to-pause-a-terminal-game-the-moment-my-agent-finishes-53k2) (dev.to).
+
 ```
 Claude Code / Codex ──finishes──▶ agent-arcade notify ──▶ ~/.agent-arcade/signal
                                                                  │
