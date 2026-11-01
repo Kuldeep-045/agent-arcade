@@ -45,7 +45,7 @@ From your shell (zsh/bash) instead:
 claude plugin install agent-arcade --marketplace Kuldeep-045/agent-arcade
 ```
 
- The plugin uses `agent-arcade` if it's installed, and `npx` if it isn't. If you already ran `agent-arcade setup` for Claude Code, you can run `agent-arcade setup --uninstall` and keep only the plugin, or keep both.
+The plugin uses `agent-arcade` if it's installed, and `npx` if it isn't. If you already ran `agent-arcade setup` for Claude Code, you can run `agent-arcade setup --uninstall` and keep only the plugin, or keep both.
 
 ### Any agent: install from npm
 
