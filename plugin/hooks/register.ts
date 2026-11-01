@@ -1,6 +1,6 @@
 // Agent Arcade as a Claude Code plugin.
 // - /arcade opens the arcade at once: no model turn, and it works while Claude is busy.
-// - When Claude finishes a turn, or stops to ask you something, the arcade is told,
+// - When Claude finishes a turn, or asks you for permission, the arcade is told at once,
 //   so a running game pauses and shows a banner.
 // Uses the agent-arcade CLI when it is installed (npm i -g agent-arcade), else npx.
 import type { Register, EngineInterface } from 'claude-code'
@@ -40,9 +40,17 @@ export const register: Register = on => {
     return next(e)
   })
 
-  // Claude is waiting on you (a permission prompt or an idle prompt): tell the arcade "ask".
-  on('classic.Notification', async ($, e, next) => {
+  // Claude asks for permission: PermissionRequest fires the moment the prompt appears
+  // (Notification's permission_prompt waits until you haven't typed for ~6 s).
+  // Never decides anything: the prompt is answered by you as usual.
+  on('classic.PermissionRequest', async ($, e, next) => {
     arcade($, ['notify', 'ask'], 5000).catch(() => {})
+    return next(e)
+  })
+
+  // Other "waiting for you" moments (an idle prompt, say). Permission prompts are covered above.
+  on('classic.Notification', async ($, e, next) => {
+    if (e.notification_type !== 'permission_prompt') arcade($, ['notify', 'ask'], 5000).catch(() => {})
     return next(e)
   })
 }

@@ -28,7 +28,7 @@ function claude(cli, remove) {
   }
   backup(CLAUDE_SETTINGS);
   s.hooks ||= {};
-  for (const [event, kind] of [['Stop', 'done'], ['Notification', 'ask']]) {
+  for (const [event, kind] of [['Stop', 'done'], ['PermissionRequest', 'ask'], ['Notification', 'ask']]) {
     const list = (s.hooks[event] || []).filter((h) => !JSON.stringify(h).includes(MARK));
     if (!remove) list.push({ hooks: [{ type: 'command', command: `${q(NODE)} ${q(cli)} notify ${kind}` }] });
     if (list.length) s.hooks[event] = list; else delete s.hooks[event];

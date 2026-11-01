@@ -1,6 +1,6 @@
 {
   "name": "agent-arcade",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Small terminal games to play while your AI coding agent (Claude Code, Codex) works. A banner pops up when it's done.",
   "author": "Skynett Games",
   "repository": {
