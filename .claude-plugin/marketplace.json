@@ -1,0 +1,14 @@
+{
+  "name": "agent-arcade",
+  "description": "Agent Arcade: terminal games to play while your AI coding agent works",
+  "owner": {
+    "name": "Kuldeep-045"
+  },
+  "plugins": [
+    {
+      "name": "agent-arcade",
+      "source": "./plugin",
+      "description": "Play tiny terminal games while Claude works: /arcade opens them instantly, and the game pauses and tells you when Claude is done or needs you"
+    }
+  ]
+}

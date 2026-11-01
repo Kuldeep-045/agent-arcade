@@ -1,0 +1,10 @@
+{
+  "name": "agent-arcade",
+  "version": "0.3.0",
+  "description": "Play tiny terminal games while Claude works: /arcade opens them instantly, and the game pauses and tells you when Claude is done or needs you",
+  "author": { "name": "Kuldeep-045" },
+  "homepage": "https://github.com/Kuldeep-045/agent-arcade",
+  "repository": "https://github.com/Kuldeep-045/agent-arcade",
+  "license": "MIT",
+  "keywords": ["games", "terminal", "arcade", "notifications"]
+}
