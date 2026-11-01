@@ -28,7 +28,7 @@ Claude Code and Codex can take minutes on a task. Instead of staring at a spinne
 
 ### Claude Code: install the plugin (easiest)
 
-At the Claude Code prompt:
+Type this **inside Claude Code**, at its prompt (not in your shell):
 
 ```
 /plugin install agent-arcade --marketplace Kuldeep-045/agent-arcade
@@ -39,7 +39,13 @@ Answer `y` to add the marketplace and press Enter to pick a scope. That's it: no
 - `/arcade` opens the arcade **instantly**, even while Claude is in the middle of a task.
 - When Claude finishes, or stops to ask you something, your game pauses and a banner tells you.
 
-From a shell instead: `claude plugin install agent-arcade --marketplace Kuldeep-045/agent-arcade`. The plugin uses `agent-arcade` if it's installed, and `npx` if it isn't. If you already ran `agent-arcade setup` for Claude Code, you can run `agent-arcade setup --uninstall` and keep only the plugin, or keep both.
+From your shell (zsh/bash) instead:
+
+```sh
+claude plugin install agent-arcade --marketplace Kuldeep-045/agent-arcade
+```
+
+ The plugin uses `agent-arcade` if it's installed, and `npx` if it isn't. If you already ran `agent-arcade setup` for Claude Code, you can run `agent-arcade setup --uninstall` and keep only the plugin, or keep both.
 
 ### Any agent: install from npm
 
